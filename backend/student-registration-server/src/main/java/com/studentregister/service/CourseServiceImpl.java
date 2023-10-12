@@ -1,7 +1,10 @@
 package com.studentregister.service;
 
+import org.springframework.stereotype.Service;
+
 import com.studentregister.model.Course;
 
+@Service
 public class CourseServiceImpl implements CourseService{
 
 	@Override
