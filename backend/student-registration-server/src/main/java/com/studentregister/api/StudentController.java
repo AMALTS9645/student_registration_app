@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studentregister.dto.InputRequest;
 import com.studentregister.model.Student;
 import com.studentregister.service.StudentService;
 
@@ -19,18 +20,18 @@ public class StudentController {
 
 	@Autowired
 	StudentService studentService;
-	
+
 	@PostMapping("/register")
-	public ResponseEntity<Student> addStudent(@RequestBody Student student){
-		return studentService.addStudent(student);
+	public ResponseEntity<Student> addStudent(@RequestBody InputRequest<Student> request) {
+		return studentService.addStudent(request);
 	}
-	
-	@PutMapping("/edit")
-	public ResponseEntity<Student> updateStudent(@RequestBody Student student){
-		return studentService.updateStudent(student);
+
+	@PutMapping("/edit/{id}")
+	public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody InputRequest<Student> request) {
+		return studentService.updateStudent(id, request);
 	}
-	
-	@DeleteMapping("/delete")
+
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
 		return studentService.deleteStudent(id);
 	}
