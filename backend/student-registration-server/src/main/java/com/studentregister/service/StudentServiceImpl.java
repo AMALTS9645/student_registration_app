@@ -53,9 +53,9 @@ public class StudentServiceImpl implements StudentService {
 		try {
 			if (studentRepository.existsById(id)) {
 				studentRepository.deleteById(id);
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Student deleted");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Student with id " +id+ " deleted");
 			}
-			throw new StudentNotFoundException("Student Not Found with given id");
+			throw new StudentNotFoundException("Student Not Found with given id " +id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

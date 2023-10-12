@@ -1,9 +1,13 @@
 package com.studentregister.service;
 
+import org.springframework.http.ResponseEntity;
+
+import com.studentregister.dto.InputRequest;
 import com.studentregister.model.Course;
 
+
 public interface CourseService {
-	public Course addCourse(Course course);
-	public Course updateCourse(Course course);
-	public void deleteCourse(Long id);
+	public ResponseEntity<Course> addCourse(InputRequest<Course> course);
+	public ResponseEntity<Course> updateCourse(Long id, InputRequest<Course> course);
+	public ResponseEntity<String> deleteCourse(Long id);
 }

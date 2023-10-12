@@ -35,6 +35,15 @@ public class StudentApiErrorController {
 		return ResponseEntity.status(status).body(body);
 	}
 	
+	@ExceptionHandler(CourseNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleCourseNotFoundException(CourseNotFoundException ex,
+			HttpServletRequest request) {
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		ErrorResponse body = new ErrorResponse(LocalDateTime.now(), status.value(), status.getReasonPhrase(),
+				ex.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(body);
+	}
+	
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<ErrorResponse> handleOtherExistsException(Exception ex,
 			HttpServletRequest request) {
