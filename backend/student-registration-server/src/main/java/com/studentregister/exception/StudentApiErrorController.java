@@ -24,4 +24,23 @@ public class StudentApiErrorController {
 				ex.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(body);
 	}
+	
+	
+	@ExceptionHandler(StudentNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleStudentNotFoundException(StudentNotFoundException ex,
+			HttpServletRequest request) {
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		ErrorResponse body = new ErrorResponse(LocalDateTime.now(), status.value(), status.getReasonPhrase(),
+				ex.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(body);
+	}
+	
+	@ExceptionHandler(value = Exception.class)
+	public ResponseEntity<ErrorResponse> handleOtherExistsException(Exception ex,
+			HttpServletRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		ErrorResponse body = new ErrorResponse(LocalDateTime.now(), status.value(), status.getReasonPhrase(),
+				ex.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(body);
+	}
 }
