@@ -41,7 +41,7 @@ public class StudentController {
 	}
 	
 	@DeleteMapping("/delete/student/{studId}/course/{courseId}")
-	public ResponseEntity<Student> deleteStudent(@PathVariable Long studId, @PathVariable Long courseId) {
+	public ResponseEntity<Student> deleteStudents(@PathVariable Long studId, @PathVariable Long courseId) {
 		return studentService.editCourseForStudent(studId, courseId);
 	}
 //	@PutMapping("/edit/course/{id}")

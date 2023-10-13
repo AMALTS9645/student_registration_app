@@ -83,8 +83,17 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public ResponseEntity<String> deleteStudent(Long id) {
 		try {
-			if (studentRepository.existsById(id)) {
-				studentRepository.deleteById(id);
+			Optional<Student> studentOptional = studentRepository.findById(id);
+	        if (studentOptional.isPresent()) {
+	            Student student = studentOptional.get();
+
+	            // Remove the student from all courses
+	            for (Course course : student.getCourses()) {
+	                course.getStudents().remove(student);
+	            }
+
+	            // Delete the student
+	            studentRepository.delete(student);
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Student with id " + id + " deleted");
 			}
 			throw new StudentNotFoundException("Student Not Found with given id " + id);
@@ -107,7 +116,7 @@ public class StudentServiceImpl implements StudentService {
 		if (student.getCourses().contains(course)) {
 			student.getCourses().remove(course);
 			return new ResponseEntity<>(studentRepository.save(student), HttpStatus.OK);
-		} 
+		}
 		return ResponseEntity.badRequest().build();
 	}
 

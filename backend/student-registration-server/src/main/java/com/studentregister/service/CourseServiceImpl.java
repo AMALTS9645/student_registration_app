@@ -12,11 +12,12 @@ import com.studentregister.dto.CourseRequest;
 import com.studentregister.dto.InputRequest;
 import com.studentregister.exception.CourseNotFoundException;
 import com.studentregister.model.Course;
+import com.studentregister.model.Student;
 import com.studentregister.repository.CourseRepository;
 
 @Service
-public class CourseServiceImpl implements CourseService{
-	
+public class CourseServiceImpl implements CourseService {
+
 	@Autowired
 	CourseRepository courseRepository;
 
@@ -40,16 +41,16 @@ public class CourseServiceImpl implements CourseService{
 		Optional<Course> course = courseRepository.findById(id);
 		if (course.isPresent()) {
 			course.get().setLastModifiedBy(request.getLoggedInUser());
-			if(!request.getDetails().getCourseName().isBlank()) {
+			if (!request.getDetails().getCourseName().isBlank()) {
 				course.get().setCourseName(request.getDetails().getCourseName());
 			}
-			if(!request.getDetails().getCouseDuration().isBlank()) {
+			if (!request.getDetails().getCouseDuration().isBlank()) {
 				course.get().setCouseDuration(request.getDetails().getCouseDuration());
 			}
-			if(!request.getDetails().getAuthor().isBlank()) {
+			if (!request.getDetails().getAuthor().isBlank()) {
 				course.get().setAuthor(request.getDetails().getAuthor());
 			}
-			
+
 			return new ResponseEntity<>(courseRepository.saveAndFlush(course.get()), HttpStatus.ACCEPTED);
 		} else {
 			throw new CourseNotFoundException("Course Not Found with given id " + id);
@@ -59,20 +60,26 @@ public class CourseServiceImpl implements CourseService{
 	@Override
 	public ResponseEntity<String> deleteCourse(Long id) {
 		try {
-			if (courseRepository.existsById(id)) {
-				courseRepository.deleteById(id);
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course with id " +id+ " deleted");
+			 Optional<Course> courseOptional = courseRepository.findById(id);
+		        if (courseOptional.isPresent()) {
+		            Course course = courseOptional.get();
+
+		            // Remove the course from all students
+		            for (Student student : course.getStudents()) {
+		                student.getCourses().remove(course);
+		            }
+
+		            // Delete the course
+		            courseRepository.delete(course);
+
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course with id " + id + " deleted");
 			}
-			throw new CourseNotFoundException("Course Not Found with given id " +id);
+			throw new CourseNotFoundException("Course Not Found with given id " + id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return ResponseEntity.badRequest().build();
 	}
-
-	
-
-
 
 }
