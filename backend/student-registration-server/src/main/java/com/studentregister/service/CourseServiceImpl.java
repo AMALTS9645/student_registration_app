@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.studentregister.dto.CourseRequest;
 import com.studentregister.dto.InputRequest;
 import com.studentregister.exception.CourseNotFoundException;
 import com.studentregister.model.Course;
@@ -20,13 +21,16 @@ public class CourseServiceImpl implements CourseService{
 	CourseRepository courseRepository;
 
 	@Override
-	public ResponseEntity<Course> addCourse(InputRequest<Course> request) {
+	public ResponseEntity<Course> addCourse(InputRequest<CourseRequest> request) {
 		String currentUser = request.getLoggedInUser();
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getDisplayName());
 
-		Course course = request.getDetails();
+		Course course = new Course();
 
 		course.setCreatedBy(currentUser);
+		course.setCourseName(request.getDetails().getCourseName());
+		course.setCouseDuration(request.getDetails().getCouseDuration());
+		course.setAuthor(request.getDetails().getAuthor());
 
 		return ResponseEntity.status(HttpStatus.OK).body(courseRepository.save(course));
 	}
@@ -36,9 +40,15 @@ public class CourseServiceImpl implements CourseService{
 		Optional<Course> course = courseRepository.findById(id);
 		if (course.isPresent()) {
 			course.get().setLastModifiedBy(request.getLoggedInUser());
-			course.get().setCourseName(request.getDetails().getCourseName());
-			course.get().setCouseDuration(request.getDetails().getCouseDuration());
-			course.get().setAuthor(request.getDetails().getAuthor());
+			if(!request.getDetails().getCourseName().isBlank()) {
+				course.get().setCourseName(request.getDetails().getCourseName());
+			}
+			if(!request.getDetails().getCouseDuration().isBlank()) {
+				course.get().setCouseDuration(request.getDetails().getCouseDuration());
+			}
+			if(!request.getDetails().getAuthor().isBlank()) {
+				course.get().setAuthor(request.getDetails().getAuthor());
+			}
 			
 			return new ResponseEntity<>(courseRepository.saveAndFlush(course.get()), HttpStatus.ACCEPTED);
 		} else {

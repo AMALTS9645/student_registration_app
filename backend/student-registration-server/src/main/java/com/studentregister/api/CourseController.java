@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studentregister.dto.CourseRequest;
 import com.studentregister.dto.InputRequest;
 import com.studentregister.model.Course;
 import com.studentregister.service.CourseService;
@@ -22,7 +23,7 @@ public class CourseController {
 	CourseService courseService;
 	
 	@PostMapping("/add")
-	public ResponseEntity<Course> addCourse(@RequestBody InputRequest<Course> request) {
+	public ResponseEntity<Course> addCourse(@RequestBody InputRequest<CourseRequest> request) {
 		return courseService.addCourse(request);
 	}
 
