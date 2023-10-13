@@ -1,6 +1,7 @@
 package com.studentregister.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -45,12 +46,10 @@ public class Student {
 	private int age;
 	private String departmentName;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "student_registration", joinColumns = {
-			@JoinColumn(name = "student_id", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "course_id", referencedColumnName = "id") })
+	
 	@JsonManagedReference
-	private Set<Course> courses;
+	@ManyToMany(mappedBy = "students", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Course> courses = new HashSet<>();
 
 	@CreatedBy
 	private String createdBy;

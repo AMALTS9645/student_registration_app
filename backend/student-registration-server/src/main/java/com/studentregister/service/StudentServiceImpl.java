@@ -2,8 +2,10 @@ package com.studentregister.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,52 +50,51 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public ResponseEntity<Student> updateStudent(Long id, InputRequest<StudentCourseRequest> request) {
-		Optional<Student> student = studentRepository.findById(id);
-		if (student.isPresent()) {
-			student.get().setLastModifiedBy(request.getLoggedInUser());
-			if (!request.getDetails().getFirstName().isBlank()) {
-				student.get().setFirstName(request.getDetails().getFirstName());
-			}
-			if (!request.getDetails().getLastName().isBlank()) {
-				student.get().setLastName(request.getDetails().getLastName());
-			}
-			if (request.getDetails().getAge() > 0) {
-				student.get().setAge(request.getDetails().getAge());
-			}
-			if (!request.getDetails().getDepartmentName().isBlank()) {
-				student.get().setDepartmentName(request.getDetails().getDepartmentName());
-			}
-			if (!request.getDetails().getCourseIds().isEmpty()) {
-				List<Course> coursesToAdd = new ArrayList<>();
-				for (Long courseId : request.getDetails().getCourseIds()) {
-					Course course = courseRepository.findById(courseId)
-							.orElseThrow(() -> new CourseNotFoundException("Course not found with ID: " + courseId));
-					coursesToAdd.add(course);
-				}
+		Optional<Student> studentOptional = studentRepository.findById(id);
+	    if (studentOptional.isPresent()) {
+	        Student student = studentOptional.get();
 
-				student.get().getCourses().addAll(coursesToAdd);
-			}
+	        // Update the basic student information
+	        student.setLastModifiedBy(request.getLoggedInUser());
+	        student.setFirstName(request.getDetails().getFirstName());
+	        student.setLastName(request.getDetails().getLastName());
+	        student.setAge(request.getDetails().getAge());
+	        student.setDepartmentName(request.getDetails().getDepartmentName());
 
-			return new ResponseEntity<>(studentRepository.saveAndFlush(student.get()), HttpStatus.ACCEPTED);
-		} else {
-			throw new StudentNotFoundException("Student Not Found with given id " + id);
-		}
+	        // Get the courses associated with the student
+	        Set<Course> coursesToAdd = student.getCourses();
+
+	        // Iterate through the course IDs provided in the request and add them to the student's courses
+	        for (Long courseId : request.getDetails().getCourseIds()) {
+	            Course course = courseRepository.findById(courseId)
+	                    .orElseThrow(() -> new CourseNotFoundException("Course not found with ID: " + courseId));
+	            coursesToAdd.add(course);
+	        }
+
+	        // Update the student's courses
+	        student.setCourses(coursesToAdd);
+
+	        // Save and flush the updated student
+	        return new ResponseEntity<>(studentRepository.saveAndFlush(student), HttpStatus.ACCEPTED);
+	    } else {
+	        throw new StudentNotFoundException("Student Not Found with given id " + id);
+	    }
 	}
 
 	@Override
 	public ResponseEntity<String> deleteStudent(Long id) {
 		try {
 			Optional<Student> studentOptional = studentRepository.findById(id);
-	        if (studentOptional.isPresent()) {
-	            Student student = studentOptional.get();
+			if (studentOptional.isPresent()) {
+				Student student = studentOptional.get();
 
-	            // Remove the student from all courses
-	            for (Course course : student.getCourses()) {
-	                course.getStudents().remove(student);
-	            }
+				// Remove the student from all courses
+				for (Course course : student.getCourses()) {
+					course.getStudents().remove(student);
+				}
 
-	            // Delete the student
-	            studentRepository.delete(student);
+				// Delete the student
+				studentRepository.delete(student);
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Student with id " + id + " deleted");
 			}
 			throw new StudentNotFoundException("Student Not Found with given id " + id);
