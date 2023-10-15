@@ -1,6 +1,7 @@
 package com.studentregister.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,7 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -20,10 +23,16 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import lombok.ToString;
+
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "course")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Course {
 
 	@Id
@@ -36,9 +45,10 @@ public class Course {
 
 	private String author;
 
-	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
 	@JsonBackReference
 	private Set<Student> students;
+
 
 	@CreatedBy
 	private String createdBy;
@@ -51,8 +61,24 @@ public class Course {
 
 	@LastModifiedDate
 	private LocalDateTime lastModifiedDate;
-	
-	
+
+	public Course() {
+		super();
+	}
+
+	public Course(Long id, String courseName, String couseDuration, String author, Set<Student> students,
+			String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate) {
+		super();
+		this.id = id;
+		this.courseName = courseName;
+		this.couseDuration = couseDuration;
+		this.author = author;
+		this.students = students;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.lastModifiedBy = lastModifiedBy;
+		this.lastModifiedDate = lastModifiedDate;
+	}
 
 	public Long getId() {
 		return id;
@@ -125,7 +151,5 @@ public class Course {
 	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
-	
-	
 
 }

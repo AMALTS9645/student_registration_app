@@ -1,15 +1,12 @@
 package com.studentregister.service;
 
-import java.util.ArrayList;
+
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.studentregister.dto.InputRequest;
 import com.studentregister.dto.StudentCourseRequest;
 import com.studentregister.exception.CourseNotFoundException;
-import com.studentregister.exception.StudentAlreadyExistsException;
 import com.studentregister.exception.StudentNotFoundException;
 import com.studentregister.model.Course;
 import com.studentregister.model.Student;
@@ -120,7 +116,7 @@ public class StudentServiceImpl implements StudentService {
 		courses = student.get().getCourses();
 		courses.add(course.get());
 
-		student.get().setCourses(courses);
+		student.get().setCourses(courses);    
 
 		return new ResponseEntity<>(studentRepository.save(student.get()), HttpStatus.OK);
 
