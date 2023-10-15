@@ -18,4 +18,10 @@ public interface CommentService {
 	public ResponseEntity<Comment> getCommentById(Long id);
 
 	public ResponseEntity<List<Comment>> getAllComment();
+
+	public ResponseEntity<List<Comment>> bulkAddComment(List<InputRequest<CommentRequest>> request);
+
+	public ResponseEntity<List<Comment>> bulkUpdateComment(List<InputRequest<CommentRequest>> request);
+
+	public ResponseEntity<String> bulkDeleteComment(List<Long> ids);
 }

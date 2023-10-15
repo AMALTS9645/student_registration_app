@@ -1,16 +1,19 @@
 package com.studentregister.dto;
 
+import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor	
+@NoArgsConstructor
 public class CommentRequest {
 
+	private Optional<Long> id;
 	private Long studentId;
 	private Long courseId;
 	private String text;
-	
+
 }

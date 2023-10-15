@@ -1,5 +1,6 @@
 package com.studentregister.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.studentregister.dto.CommentRequest;
+import com.studentregister.dto.CourseRequest;
 import com.studentregister.dto.InputRequest;
 import com.studentregister.exception.CommentNotFoundException;
 import com.studentregister.model.Comment;
@@ -85,6 +87,34 @@ public class CommentServiceImpl implements CommentService{
 	@Override
 	public ResponseEntity<List<Comment>> getAllComment() {
 		return new ResponseEntity<>(commentRepository.findAll(), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<Comment>> bulkAddComment(List<InputRequest<CommentRequest>> request) {
+		List<Comment> list = new ArrayList<>();
+		for (InputRequest<CommentRequest> req : request) {
+			ResponseEntity<Comment> comment = addComment(req);
+			list.add(comment.getBody());
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+
+	@Override
+	public ResponseEntity<List<Comment>> bulkUpdateComment(List<InputRequest<CommentRequest>> request) {
+		List<Comment> list = new ArrayList<>();
+		for (InputRequest<CommentRequest> req : request) {
+			ResponseEntity<Comment> comment = updateComment(req.getDetails().getId().get(), req);
+			list.add(comment.getBody());
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+
+	@Override
+	public ResponseEntity<String> bulkDeleteComment(List<Long> ids) {
+		for (Long idItem : ids) {
+			deleteComment(idItem);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body("Comments deleted");
 	}
 
 }

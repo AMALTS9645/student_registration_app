@@ -30,15 +30,27 @@ public class StudentController {
 	public ResponseEntity<Student> addStudent(@RequestBody InputRequest<StudentCourseRequest> request) {
 		return studentService.addStudent(request);
 	}
+	@PostMapping("/register/all")
+	public ResponseEntity<List<Student>> bulkAddStudent(@RequestBody List<InputRequest<StudentCourseRequest>> request) {
+		return studentService.bulkAddStudent(request);
+	}
 
 	@PutMapping("/edit/{id}")
 	public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody InputRequest<StudentCourseRequest> request) {
 		return studentService.updateStudent(id, request);
 	}
+	@PutMapping("/editall")
+	public ResponseEntity<List<Student>> bulkUpdateStudent(@RequestBody List<InputRequest<StudentCourseRequest>> request) {
+		return studentService.bulkUpdateStudent(request);
+	}
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
 		return studentService.deleteStudent(id);
+	}
+	@DeleteMapping("/deleteall")
+	public ResponseEntity<String> deleteStudent(@RequestBody List<Long> ids) {
+		return studentService.bulkDeleteStudent(ids);
 	}
 	
 	@DeleteMapping("/delete/student/{studId}/course/{courseId}")

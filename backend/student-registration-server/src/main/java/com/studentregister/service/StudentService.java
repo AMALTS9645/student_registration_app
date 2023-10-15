@@ -22,4 +22,10 @@ public interface StudentService {
 	public ResponseEntity<Student> assignCourseToStudent(Long sId, Long cId);
 
 	public ResponseEntity<List<Student>> getAllStudents();
+
+	public ResponseEntity<List<Student>> bulkAddStudent(List<InputRequest<StudentCourseRequest>> request);
+
+	public ResponseEntity<List<Student>> bulkUpdateStudent(List<InputRequest<StudentCourseRequest>> request);
+
+	public ResponseEntity<String> bulkDeleteStudent(List<Long> ids);
 }

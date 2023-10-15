@@ -1,11 +1,10 @@
 package com.studentregister.service;
 
-
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -116,7 +115,7 @@ public class StudentServiceImpl implements StudentService {
 		courses = student.get().getCourses();
 		courses.add(course.get());
 
-		student.get().setCourses(courses);    
+		student.get().setCourses(courses);
 
 		return new ResponseEntity<>(studentRepository.save(student.get()), HttpStatus.OK);
 
@@ -125,6 +124,34 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public ResponseEntity<List<Student>> getAllStudents() {
 		return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<Student>> bulkAddStudent(List<InputRequest<StudentCourseRequest>> request) {
+		List<Student> list = new ArrayList<>();
+		for (InputRequest<StudentCourseRequest> req : request) {
+			ResponseEntity<Student> stud = addStudent(req);
+			list.add(stud.getBody());
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+
+	@Override
+	public ResponseEntity<List<Student>> bulkUpdateStudent(List<InputRequest<StudentCourseRequest>> request) {
+		List<Student> list = new ArrayList<>();
+		for (InputRequest<StudentCourseRequest> req : request) {
+			ResponseEntity<Student> stud = updateStudent(req.getDetails().getId().get(), req);
+			list.add(stud.getBody());
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+
+	@Override
+	public ResponseEntity<String> bulkDeleteStudent(List<Long> ids) {
+		for (Long idItem : ids) {
+			deleteStudent(idItem);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body("Students deleted");
 	}
 
 }

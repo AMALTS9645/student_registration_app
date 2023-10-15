@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studentregister.dto.CourseRequest;
 import com.studentregister.dto.InputRequest;
+import com.studentregister.dto.StudentCourseRequest;
 import com.studentregister.model.Course;
 import com.studentregister.model.Student;
 import com.studentregister.service.CourseService;
@@ -30,15 +31,28 @@ public class CourseController {
 	public ResponseEntity<Course> addCourse(@RequestBody InputRequest<CourseRequest> request) {
 		return courseService.addCourse(request);
 	}
+	@PostMapping("/register/all")
+	public ResponseEntity<List<Course>> bulkAddCourse(@RequestBody List<InputRequest<CourseRequest>> request) {
+		return courseService.bulkAddCourse(request);
+	}
 
 	@PutMapping("/edit/{id}")
-	public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody InputRequest<Course> request) {
+	public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody InputRequest<CourseRequest> request) {
 		return courseService.updateCourse(id, request);
+	}
+	@PutMapping("/editall")
+	public ResponseEntity<List<Course>> bulkUpdateCourse(@RequestBody List<InputRequest<CourseRequest>> request) {
+		return courseService.bulkUpdateCourse(request);
 	}
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
 		return courseService.deleteCourse(id);
+	}
+	
+	@DeleteMapping("/deleteall")
+	public ResponseEntity<String> deleteCourse(@RequestBody List<Long> ids) {
+		return courseService.bulkDeleteCourse(ids);
 	}
 	
 	@GetMapping("/{id}")
