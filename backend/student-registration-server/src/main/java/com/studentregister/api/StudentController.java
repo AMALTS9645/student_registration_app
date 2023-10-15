@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,10 +43,20 @@ public class StudentController {
 	
 	@DeleteMapping("/delete/student/{studId}/course/{courseId}")
 	public ResponseEntity<Student> deleteStudents(@PathVariable Long studId, @PathVariable Long courseId) {
-		return studentService.editCourseForStudent(studId, courseId);
+		return studentService.deleteCourseForStudent(studId, courseId);
 	}
-//	@PutMapping("/edit/course/{id}")
-//	public ResponseEntity<Student> editStudentCourses(@PathVariable Long id, @RequestBody StudentCourse courseIds) {
-//		return studentService.addCoursesForStudent(id, courseIds);
-//	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Student> getStudentById(@PathVariable Long id){
+		return studentService.getStudentById(id);
+	}
+	@PutMapping("/{sId}/course/{cId}")
+	public ResponseEntity<Student> assignCourseToStudent(@PathVariable Long sId, @PathVariable Long cId) {
+		return studentService.assignCourseToStudent(sId, cId);
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<Student>> getAllStudents(){
+		return studentService.getAllStudents();
+	}
 }

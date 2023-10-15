@@ -12,6 +12,8 @@ public interface StudentService {
 	public ResponseEntity<Student> addStudent(InputRequest<StudentCourseRequest> student);
 	public ResponseEntity<Student> updateStudent(Long id,InputRequest<StudentCourseRequest> request);
 	public ResponseEntity<String> deleteStudent(Long id);
-	public ResponseEntity<Student> editCourseForStudent(Long studentId, Long courseId);
-//	public ResponseEntity<Student> addCoursesForStudent(Long studentId, InputRequest<StudentCourse> courseIds);
+	public ResponseEntity<Student> deleteCourseForStudent(Long studentId, Long courseId);
+	public ResponseEntity<Student> getStudentById(Long id);
+	public ResponseEntity<Student> assignCourseToStudent(Long sId, Long cId);
+	public ResponseEntity<List<Student>> getAllStudents();
 }

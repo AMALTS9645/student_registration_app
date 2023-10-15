@@ -1,7 +1,6 @@
 package com.studentregister.model;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,8 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -23,46 +20,112 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "course")
 public class Course {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String courseName;
-    
-    private String couseDuration;
-    
-    private String author;
-     
-    
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "student_registration", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    @JsonBackReference
-    private Set<Student> students = new HashSet<>();
-    
-    
-    @CreatedBy
-    private String createdBy;
+	private String courseName;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
+	private String couseDuration;
 
-    @LastModifiedBy
-    private String lastModifiedBy;
+	private String author;
 
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private Set<Student> students;
+
+	@CreatedBy
+	private String createdBy;
+
+	@CreatedDate
+	private LocalDateTime createdDate;
+
+	@LastModifiedBy
+	private String lastModifiedBy;
+
+	@LastModifiedDate
+	private LocalDateTime lastModifiedDate;
+	
+	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public String getCouseDuration() {
+		return couseDuration;
+	}
+
+	public void setCouseDuration(String couseDuration) {
+		this.couseDuration = couseDuration;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public Set<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(Set<Student> students) {
+		this.students = students;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public LocalDateTime getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+	
+	
+
 }

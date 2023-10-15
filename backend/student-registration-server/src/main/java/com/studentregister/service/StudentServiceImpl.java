@@ -6,7 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,34 +54,18 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public ResponseEntity<Student> updateStudent(Long id, InputRequest<StudentCourseRequest> request) {
 		Optional<Student> studentOptional = studentRepository.findById(id);
-	    if (studentOptional.isPresent()) {
-	        Student student = studentOptional.get();
+		if (studentOptional.isPresent()) {
+			Student student = studentOptional.get();
 
-	        // Update the basic student information
-	        student.setLastModifiedBy(request.getLoggedInUser());
-	        student.setFirstName(request.getDetails().getFirstName());
-	        student.setLastName(request.getDetails().getLastName());
-	        student.setAge(request.getDetails().getAge());
-	        student.setDepartmentName(request.getDetails().getDepartmentName());
-
-	        // Get the courses associated with the student
-	        Set<Course> coursesToAdd = student.getCourses();
-
-	        // Iterate through the course IDs provided in the request and add them to the student's courses
-	        for (Long courseId : request.getDetails().getCourseIds()) {
-	            Course course = courseRepository.findById(courseId)
-	                    .orElseThrow(() -> new CourseNotFoundException("Course not found with ID: " + courseId));
-	            coursesToAdd.add(course);
-	        }
-
-	        // Update the student's courses
-	        student.setCourses(coursesToAdd);
-
-	        // Save and flush the updated student
-	        return new ResponseEntity<>(studentRepository.saveAndFlush(student), HttpStatus.ACCEPTED);
-	    } else {
-	        throw new StudentNotFoundException("Student Not Found with given id " + id);
-	    }
+			student.setLastModifiedBy(request.getLoggedInUser());
+			student.setFirstName(request.getDetails().getFirstName());
+			student.setLastName(request.getDetails().getLastName());
+			student.setAge(request.getDetails().getAge());
+			student.setDepartmentName(request.getDetails().getDepartmentName());
+			return new ResponseEntity<>(studentRepository.saveAndFlush(student), HttpStatus.ACCEPTED);
+		} else {
+			throw new StudentNotFoundException("Student Not Found with given id " + id);
+		}
 	}
 
 	@Override
@@ -87,13 +74,6 @@ public class StudentServiceImpl implements StudentService {
 			Optional<Student> studentOptional = studentRepository.findById(id);
 			if (studentOptional.isPresent()) {
 				Student student = studentOptional.get();
-
-				// Remove the student from all courses
-				for (Course course : student.getCourses()) {
-					course.getStudents().remove(student);
-				}
-
-				// Delete the student
 				studentRepository.delete(student);
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Student with id " + id + " deleted");
 			}
@@ -107,7 +87,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public ResponseEntity<Student> editCourseForStudent(Long studentId, Long courseId) {
+	public ResponseEntity<Student> deleteCourseForStudent(Long studentId, Long courseId) {
 		Student student = studentRepository.findById(studentId)
 				.orElseThrow(() -> new StudentNotFoundException("Student not found"));
 
@@ -121,21 +101,34 @@ public class StudentServiceImpl implements StudentService {
 		return ResponseEntity.badRequest().build();
 	}
 
-///	@Override
-///	public ResponseEntity<Student> addCoursesForStudent(Long studentId,InputRequest<StudentCourse>> courseIds) {
-///		Student student = studentRepository.findById(studentId)
-///				.orElseThrow(() -> new StudentNotFoundException("Student not found with id " +studentId));
-//			
-///		List<Course> coursesToAdd = new ArrayList<>();
-///		for (Long courseId : courseId.getDetails().getCourseIds())) {
-///			Course course = courseRepository.findById(courseId)
-///					.orElseThrow(() -> newCourseNotFoundExceptionn("Course not found with ID: " + courseId));
-///			coursesToAdd.add(course);
-///		}
-///
-///		student.getCourses().addAll(coursesToAdd);
-///
-///		returnResponseEntity.status(HttpStatus.OK).body((studentRepository.save(student));
-///	}
+	@Override
+	public ResponseEntity<Student> getStudentById(Long id) {
+		Optional<Student> student = studentRepository.findById(id);
+		if (student.isPresent()) {
+			return new ResponseEntity<>(student.get(), HttpStatus.FOUND);
+		}
+		return ResponseEntity.notFound().build();
+	}
+
+	@Override
+	public ResponseEntity<Student> assignCourseToStudent(Long sId, Long cId) {
+
+		Set<Course> courses = null;
+		Optional<Student> student = studentRepository.findById(sId);
+		Optional<Course> course = courseRepository.findById(cId);
+
+		courses = student.get().getCourses();
+		courses.add(course.get());
+
+		student.get().setCourses(courses);
+
+		return new ResponseEntity<>(studentRepository.save(student.get()), HttpStatus.OK);
+
+	}
+
+	@Override
+	public ResponseEntity<List<Student>> getAllStudents() {
+		return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
+	}
 
 }

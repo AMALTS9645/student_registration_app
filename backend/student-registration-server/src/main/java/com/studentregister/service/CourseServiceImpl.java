@@ -1,6 +1,7 @@
 package com.studentregister.service;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +66,9 @@ public class CourseServiceImpl implements CourseService {
 		            Course course = courseOptional.get();
 
 		            // Remove the course from all students
-		            for (Student student : course.getStudents()) {
-		                student.getCourses().remove(course);
-		            }
+//		            for (Student student : course.getStudents()) {
+//		                student.getCourses().remove(course);
+//		            }
 
 		            // Delete the course
 		            courseRepository.delete(course);
@@ -80,6 +81,20 @@ public class CourseServiceImpl implements CourseService {
 		}
 
 		return ResponseEntity.badRequest().build();
+	}
+	
+	@Override
+	public ResponseEntity<Course> getCourseById(Long id) {
+		Optional<Course> course = courseRepository.findById(id);
+		if(course.isPresent()) {
+			return new ResponseEntity<>(course.get(),HttpStatus.FOUND);
+		}
+		return ResponseEntity.notFound().build();
+	}
+
+	@Override
+	public ResponseEntity<List<Course>> getAllCourse() {
+		return ResponseEntity.status(HttpStatus.FOUND).body(courseRepository.findAll());
 	}
 
 }

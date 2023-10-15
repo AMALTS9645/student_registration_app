@@ -1,7 +1,6 @@
 package com.studentregister.model;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,16 +21,10 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "student")
@@ -46,10 +39,10 @@ public class Student {
 	private int age;
 	private String departmentName;
 
-	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "student_registration", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	@JsonManagedReference
-	@ManyToMany(mappedBy = "students", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Course> courses = new HashSet<>();
+	private Set<Course> courses;
 
 	@CreatedBy
 	private String createdBy;
@@ -62,5 +55,85 @@ public class Student {
 
 	@LastModifiedDate
 	private LocalDateTime lastModifiedDate;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+	public Set<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(Set<Course> courses) {
+		this.courses = courses;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public LocalDateTime getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
 
 }
