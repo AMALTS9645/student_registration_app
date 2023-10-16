@@ -79,6 +79,34 @@ function addInput() {
 
 addBtn.addEventListener("click", addInput);
 
+const register = async (data) => {
+    let response = await fetch("http://localhost:8000/api/student/register", {
+      method: "POST",
+
+      body: JSON.stringify(data[0]),
+
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+
+    if (response.ok) {
+      let data = await response.json();
+
+      console.log(data);
+
+      alert("data Added");
+
+      return Promise.resolve(data);
+    } else {
+      console.log(response);
+
+      return Promise.reject({
+        message: `Error ${response.status}`,
+      });
+    }
+};
+
 function displayInputData(event) {
   event.preventDefault();
   const forms = document.querySelectorAll("form");
@@ -90,11 +118,9 @@ function displayInputData(event) {
     inputs.forEach((input) => {
       studentData[input.id] = input.value;
     });
-    inputData.push(studentData);
-    
+    inputData.push({ userId: "Admin", details: studentData });
   });
-  console.log(inputData);
-  console.log(inputData.length);
+  register(inputData);
 }
 
 registerButton.addEventListener("click", displayInputData);
