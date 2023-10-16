@@ -1,12 +1,10 @@
 const addBtn = document.querySelector("#add");
 const input = document.querySelector(".card");
-
-
 const registerButton = document.createElement("button");
 registerButton.type = "submit";
+registerButton.id = "register";
 registerButton.classList.add("btn", "btn-primary", "btn-block");
 registerButton.textContent = "Register";
-
 
 function addInput() {
   const newForm = document.createElement("form");
@@ -20,7 +18,6 @@ function addInput() {
   const departmentName = document.createElement("input");
   const card = document.createElement("div");
   const separator = document.createElement("hr");
-
 
   const removeButton = document.createElement("button");
   removeButton.type = "button";
@@ -62,7 +59,6 @@ function addInput() {
 
   card.classList.add("card-body");
 
-
   newForm.appendChild(firstNameLabel);
   newForm.appendChild(firstName);
   newForm.appendChild(lastNameLabel);
@@ -72,14 +68,33 @@ function addInput() {
   newForm.appendChild(departmentNameLabel);
   newForm.appendChild(departmentName);
   newForm.appendChild(removeButton);
-  newForm.appendChild(separator)
-
+  newForm.appendChild(separator);
 
   newForm.appendChild(registerButton);
-// ____________________________________________________
+  // ____________________________________________________
   card.appendChild(newForm);
 
   input.appendChild(card);
 }
 
 addBtn.addEventListener("click", addInput);
+
+function displayInputData(event) {
+  event.preventDefault();
+  const forms = document.querySelectorAll("form");
+  const inputData = [];
+  forms.forEach((form) => {
+    const studentData = {};
+    const inputs = form.querySelectorAll("input");
+
+    inputs.forEach((input) => {
+      studentData[input.id] = input.value;
+    });
+    inputData.push(studentData);
+    
+  });
+  console.log(inputData);
+  console.log(inputData.length);
+}
+
+registerButton.addEventListener("click", displayInputData);
