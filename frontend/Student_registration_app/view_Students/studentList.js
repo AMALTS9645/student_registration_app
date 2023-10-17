@@ -49,20 +49,27 @@ function populateTable(data) {
 
     const cellActions = document.createElement("td");
 
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.classList.add("btn", "btn-danger", "m-1");
+    deleteButton.addEventListener("click", () => {
+      console.log("Delete clicked for item with ID: " + item.id);
+    });
+    const viewButton = document.createElement("button");
+    viewButton.textContent = "View";
+    viewButton.classList.add("btn", "btn-primary", "m-1");
+    viewButton.addEventListener("click", () => {
+      console.log("Delete clicked for item with ID: " + item.id);
+    });
+
     const updateButton = document.createElement("button");
     updateButton.textContent = "Update";
     updateButton.classList.add("btn", "btn-warning", "m-1");
     updateButton.addEventListener("click", () => {
-      console.log("Update clicked for item with ID: " + item.id);
+      console.log("update clicked for item with ID: " + item.id);
     });
 
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
-    deleteButton.classList.add("btn", "btn-danger");
-    deleteButton.addEventListener("click", () => {
-      console.log("Delete clicked for item with ID: " + item.id);
-    });
-
+    cellActions.appendChild(viewButton);
     cellActions.appendChild(updateButton);
     cellActions.appendChild(deleteButton);
 
@@ -76,3 +83,36 @@ function populateTable(data) {
     tableBody.appendChild(row);
   });
 }
+
+// ________________________update____________________
+const mainCheckbox = document.getElementById('customCheck1');
+mainCheckbox.addEventListener('change', function () {
+    const tableBody = document.getElementById('table-body');
+    const rows = tableBody.querySelectorAll('tr');
+
+    const addCheckboxes = mainCheckbox.checked;
+
+    rows.forEach((row, index) => {
+        if (addCheckboxes) {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.classList.add('custom-control-input');
+
+            const cell = document.createElement('td');
+            cell.appendChild(checkbox);
+
+            // Insert the checkbox cell after the "Department" column
+            const departmentCell = row.querySelector('td:nth-child(5)'); // Assuming "Department" is the fifth column (1-based index)
+            if (departmentCell) {
+                row.insertBefore(cell, departmentCell.nextSibling);
+            }
+        } else {
+            // Remove any existing checkboxes if the main checkbox is unchecked
+            const existingCheckboxes = row.querySelectorAll('.custom-control-input');
+            existingCheckboxes.forEach((cb) => {
+                row.removeChild(cb.parentElement);
+            });
+        }
+    });
+});
+

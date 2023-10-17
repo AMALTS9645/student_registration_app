@@ -68,6 +68,34 @@ async function register(data) {
       let responseData = await response.json();
       console.log(responseData);
       alert("Course Added");
+      window.location.href = "../view_course/view_course.html";
+      return Promise.resolve(data);
+    } else {
+      console.error(response);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function registerAll(data) {
+  try {
+    let response = await fetch(
+      "http://localhost:8000/api/course/register/all",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+
+    if (response.ok) {
+      let responseData = await response.json();
+      console.log(responseData);
+      alert("Courses Added");
+      window.location.href = "../view_course/view_course.html";
+      return Promise.resolve(data);
     } else {
       console.error(response);
     }
@@ -89,7 +117,11 @@ function displayInputData(event) {
     inputData.push({ userId: "Admin", details: courseData });
   });
   console.log(inputData);
-  register(inputData);
+  if (inputData.length === 1) {
+    register(inputData);
+  } else if (inputData.length > 1) {
+    registerAll(inputData);
+  }
 }
 
 registerButton.addEventListener("click", displayInputData);

@@ -47,20 +47,29 @@ const fetchApiData = async () => {
 
       const cellActions = document.createElement("td");
 
-    const updateButton = document.createElement("button");
-    updateButton.textContent = "Update";
-    updateButton.classList.add("btn", "btn-warning", "m-1");
-    updateButton.addEventListener("click", () => {
-      console.log("Update clicked for item with ID: " + item.id);
-    });
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
-    deleteButton.classList.add("btn", "btn-danger");
+    deleteButton.classList.add("btn", "btn-danger", "m1");
     deleteButton.addEventListener("click", () => {
       console.log("Delete clicked for item with ID: " + item.id);
     });
 
+    const viewButton = document.createElement("button");
+    viewButton.textContent = "View";
+    viewButton.classList.add("btn", "btn-primary", "m-1");
+    viewButton.addEventListener("click", () => {
+      console.log("view clicked for item with ID: " + item.id);
+    });
+
+    const updateButton = document.createElement("button");
+    updateButton.textContent = "Update";
+    updateButton.classList.add("btn", "btn-warning", "m-1");
+    updateButton.addEventListener("click", () => {
+      console.log("update clicked for item with ID: " + item.id);
+    });
+
+    cellActions.appendChild(viewButton);
     cellActions.appendChild(updateButton);
     cellActions.appendChild(deleteButton);
 

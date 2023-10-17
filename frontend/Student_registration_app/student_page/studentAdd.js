@@ -80,31 +80,58 @@ function addInput() {
 addBtn.addEventListener("click", addInput);
 
 const register = async (data) => {
-    let response = await fetch("http://localhost:8000/api/student/register", {
-      method: "POST",
+  let response = await fetch("http://localhost:8000/api/student/register", {
+    method: "POST",
 
-      body: JSON.stringify(data[0]),
+    body: JSON.stringify(data[0]),
 
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (response.ok) {
+    let data = await response.json();
+
+    console.log(data);
+
+    alert("Student Added");
+    window.location.href = "../view_Students/view_students.html";
+    return Promise.resolve(data);
+  } else {
+    console.log(response);
+
+    return Promise.reject({
+      message: `Error ${response.status}`,
     });
+  }
+};
+const registerAll = async (data) => {
+  let response = await fetch("http://localhost:8000/api/student/register/all", {
+    method: "POST",
 
-    if (response.ok) {
-      let data = await response.json();
+    body: JSON.stringify(data),
 
-      console.log(data);
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
 
-      alert("Student Added");
+  if (response.ok) {
+    let data = await response.json();
 
-      return Promise.resolve(data);
-    } else {
-      console.log(response);
+    console.log(data);
 
-      return Promise.reject({
-        message: `Error ${response.status}`,
-      });
-    }
+    alert("Students Added");
+    window.location.href = "../view_Students/view_students.html";
+    return Promise.resolve(data);
+  } else {
+    console.log(response);
+
+    return Promise.reject({
+      message: `Error ${response.status}`,
+    });
+  }
 };
 
 function displayInputData(event) {
@@ -120,7 +147,11 @@ function displayInputData(event) {
     });
     inputData.push({ userId: "Admin", details: studentData });
   });
-  register(inputData);
+  if (inputData.length === 1) {
+    register(inputData);
+  }else if(inputData.length > 1){
+    registerAll(inputData);
+  }
 }
 
 registerButton.addEventListener("click", displayInputData);
