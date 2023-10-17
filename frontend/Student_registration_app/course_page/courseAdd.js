@@ -19,7 +19,7 @@ function addCourse() {
   const courseDurationLabel = createLabel("Course Duration:");
   const courseDurationInput = createInput(
     "text",
-    "courseDuration",
+    "couseDuration",
     "Enter Course Duration"
   );
 
