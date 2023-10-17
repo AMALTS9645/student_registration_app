@@ -95,7 +95,7 @@ const register = async (data) => {
 
       console.log(data);
 
-      alert("data Added");
+      alert("Student Added");
 
       return Promise.resolve(data);
     } else {

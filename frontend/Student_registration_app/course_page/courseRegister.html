@@ -9,14 +9,18 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="../style.css" />
     <title>Registration</title>
   </head>
   <body>
     <div class="container mt-5">
       <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
         <div class="container">
-          <a href="index.html" class="navbar-brand">Student registration</a>
+          <a href="../index.html" class="navbar-brand">Student registration</a>
 
           <button
             class="navbar-toggler"
@@ -30,7 +34,7 @@
           <div class="collapse navbar-collapse" id="navmenu">
             <ul class="navbar-nav ml-auto ms-auto">
               <li class="nav-item">
-                <a href="studentRegister.html" class="nav-link">Add Student</a>
+                <a href="../student_page/studentRegister.html" class="nav-link">Add Student</a>
               </li>
               <li class="nav-item">
                 <a href="courseRegister.html" class="nav-link">Add Course</a>
@@ -46,31 +50,16 @@
       <div class="row">
         <div class="col-md-5 offset-md-3">
           <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between">
               <h3>Add Course</h3>
+              <i id="add" class="bi bi-plus-circle fs-3 btn"></i>
             </div>
-            <div class="card-body">
-                <form id="registration-form">
-                    <div class="form-group">
-                        <label for="courseName">Course Name:</label>
-                        <input type="text" class="form-control my-3" id="courseName" name="courseName" placeholder="Enter course name">
-                    </div>
-                    <div class="form-group">
-                        <label for="courseDuration">Course Duration:</label>
-                        <input type="text" class="form-control my-3" id="courseDuration" name="courseDuration" placeholder="Enter Course Duration">
-                    </div>
-                    <div class="form-group">
-                        <label for="author">Author:</label>
-                        <input type="number" class="form-control my-3" id="author" name="author" placeholder="Enter author">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Register</button>
-                </form>
-                
-            </div>
+            
           </div>
         </div>
       </div>
     </div>
+    <script src="courseAdd.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
