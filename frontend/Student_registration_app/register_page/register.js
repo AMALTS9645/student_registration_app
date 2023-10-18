@@ -1,5 +1,5 @@
 const fetchApiCourse = async () => {
-  let response = await fetch("http://localhost:8000/api/course");
+  let response = await fetch("http://localhost:8888/api/course");
 
   if (response.status === 302) {
     let data = await response.json();
@@ -17,7 +17,7 @@ const fetchApiCourse = async () => {
 };
 
 const fetchApiStudent = async () => {
-  let response = await fetch("http://localhost:8000/api/student");
+  let response = await fetch("http://localhost:8888/api/student");
 
   if (response.ok) {
     let data = await response.json();
@@ -76,7 +76,7 @@ window.addEventListener("load", () => {
 
 const registerCourseApi = async (cId, sId) => {
   let response = await fetch(
-    `http://localhost:8000/api/student/${sId}/course/${cId}`,
+    `http://localhost:8888/api/student/${sId}/course/${cId}`,
     {
       method: "PUT",
     }

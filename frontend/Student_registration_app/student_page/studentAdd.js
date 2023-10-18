@@ -80,7 +80,7 @@ function addInput() {
 addBtn.addEventListener("click", addInput);
 
 const register = async (data) => {
-  let response = await fetch("http://localhost:8000/api/student/register", {
+  let response = await fetch("http://localhost:8888/api/student/register", {
     method: "POST",
 
     body: JSON.stringify(data[0]),
@@ -107,7 +107,7 @@ const register = async (data) => {
   }
 };
 const registerAll = async (data) => {
-  let response = await fetch("http://localhost:8000/api/student/register/all", {
+  let response = await fetch("http://localhost:8888/api/student/register/all", {
     method: "POST",
 
     body: JSON.stringify(data),

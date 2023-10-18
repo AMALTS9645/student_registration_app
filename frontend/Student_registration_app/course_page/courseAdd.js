@@ -56,7 +56,7 @@ addBtn.addEventListener("click", addCourse);
 
 async function register(data) {
   try {
-    let response = await fetch("http://localhost:8000/api/course/add", {
+    let response = await fetch("http://localhost:8888/api/course/add", {
       method: "POST",
       body: JSON.stringify(data[0]),
       headers: {
@@ -80,7 +80,7 @@ async function register(data) {
 async function registerAll(data) {
   try {
     let response = await fetch(
-      "http://localhost:8000/api/course/register/all",
+      "http://localhost:8888/api/course/register/all",
       {
         method: "POST",
         body: JSON.stringify(data),

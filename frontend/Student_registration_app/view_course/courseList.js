@@ -1,5 +1,5 @@
 const fetchApiData = async () => {
-  let response = await fetch("http://localhost:8000/api/course");
+  let response = await fetch("http://localhost:8888/api/course");
 
   if (response.status === 302) {
     let data = await response.json();
@@ -17,7 +17,7 @@ const fetchApiData = async () => {
 };
 
 const deleteItem = async (id) => {
-  let response = await fetch(`http://localhost:8000/api/course/delete/${id}`, {
+  let response = await fetch(`http://localhost:8888/api/course/delete/${id}`, {
     method: "DELETE",
     headers: {
       "Content-type": "application/json; charset=UTF-8",
