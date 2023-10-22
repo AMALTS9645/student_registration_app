@@ -9,11 +9,10 @@ import com.studentregister.dto.InputRequest;
 import com.studentregister.model.Comment;
 
 public interface CommentService {
-//	public ResponseEntity<Comment> addComment(InputRequest<CommentRequest> comment);
-//
-//	public ResponseEntity<Comment> updateComment(Long id, InputRequest<CommentRequest> comment);
-//
-//	public ResponseEntity<String> deleteComment(Long id);
+
+	public ResponseEntity<Comment> updateComment(Long id, InputRequest<CommentRequest> comment);
+
+	public ResponseEntity<String> deleteComment(Long id);
 //
 //	public ResponseEntity<Comment> getCommentById(Long id);
 //
