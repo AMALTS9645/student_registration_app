@@ -13,7 +13,6 @@ public class CommentRequest {
 
 	private Optional<Long> id;
 	private Long studentId;
-	private Long courseId;
 	private String text;
 
 }

@@ -3,6 +3,8 @@ package com.studentregister.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,7 +31,7 @@ public class StudentController {
 	StudentService studentService;
 
 	@PostMapping("/register")
-	public ResponseEntity<Student> addStudent(@RequestBody InputRequest<StudentCourseRequest> request) {
+	public ResponseEntity<Student> addStudent(@RequestBody @Valid InputRequest<StudentCourseRequest> request) {
 		return studentService.addStudent(request);
 	}
 	@PostMapping("/register/all")

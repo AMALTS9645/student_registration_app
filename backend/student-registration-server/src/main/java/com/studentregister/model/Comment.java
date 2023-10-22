@@ -19,23 +19,24 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@ToString
 public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String courseName;
+	
+	private String studentName;
 
 	private String text;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Course course;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Student student;
 
 	@CreatedBy
 	private String createdBy;
@@ -53,18 +54,22 @@ public class Comment {
 		super();
 	}
 
-	public Comment(Long id, String text, Course course, Student student, String createdBy, LocalDateTime createdDate,
-			String lastModifiedBy, LocalDateTime lastModifiedDate) {
+	
+	
+	public Comment(Long id, String courseName, String studentName, String text, String createdBy,
+			LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate) {
 		super();
 		this.id = id;
+		this.courseName = courseName;
+		this.studentName = studentName;
 		this.text = text;
-		this.course = course;
-		this.student = student;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
 		this.lastModifiedBy = lastModifiedBy;
 		this.lastModifiedDate = lastModifiedDate;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -74,28 +79,28 @@ public class Comment {
 		this.id = id;
 	}
 
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
 	public String getText() {
 		return text;
 	}
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public Course getCourse() {
-		return course;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
-	}
-
-	public Student getStudent() {
-		return student;
-	}
-
-	public void setStudent(Student student) {
-		this.student = student;
 	}
 
 	public String getCreatedBy() {
@@ -129,5 +134,48 @@ public class Comment {
 	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
+
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((courseName == null) ? 0 : courseName.hashCode());
+		result = prime * result + ((studentName == null) ? 0 : studentName.hashCode());
+		result = prime * result + ((text == null) ? 0 : text.hashCode());
+		return result;
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Comment other = (Comment) obj;
+		if (courseName == null) {
+			if (other.courseName != null)
+				return false;
+		} else if (!courseName.equals(other.courseName))
+			return false;
+		if (studentName == null) {
+			if (other.studentName != null)
+				return false;
+		} else if (!studentName.equals(other.studentName))
+			return false;
+		if (text == null) {
+			if (other.text != null)
+				return false;
+		} else if (!text.equals(other.text))
+			return false;
+		return true;
+	}
+
+
 
 }

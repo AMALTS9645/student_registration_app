@@ -2,6 +2,8 @@ package com.studentregister.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studentregister.dto.CommentRequest;
 import com.studentregister.dto.CourseRequest;
 import com.studentregister.dto.InputRequest;
 import com.studentregister.dto.StudentCourseRequest;
@@ -30,7 +33,7 @@ public class CourseController {
 	CourseService courseService;
 	
 	@PostMapping("/add")
-	public ResponseEntity<Course> addCourse(@RequestBody InputRequest<CourseRequest> request) {
+	public ResponseEntity<Course> addCourse(@RequestBody @Valid InputRequest<CourseRequest> request) {
 		return courseService.addCourse(request);
 	}
 	@PostMapping("/register/all")
@@ -65,5 +68,14 @@ public class CourseController {
 	@GetMapping
 	public ResponseEntity<List<Course>> getAllCourse(){
 		return courseService.getAllCourse();
+	}
+	
+	@PutMapping("/comment/{id}")
+	public ResponseEntity<Course> updateCourseComment(@PathVariable Long id, @RequestBody InputRequest<CommentRequest> request){
+		return courseService.updateCourseComment(id, request);
+	}
+	@PutMapping("/comment/all/{id}")
+	public ResponseEntity<List<Course>> updateBulkCourseComment(@PathVariable Long id, @RequestBody List<InputRequest<CommentRequest>> request){
+		return courseService.updateBulkCourseComment(id, request);
 	}
 }

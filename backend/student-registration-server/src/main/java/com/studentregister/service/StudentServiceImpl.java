@@ -49,8 +49,9 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public ResponseEntity<Student> updateStudent(Long id, InputRequest<StudentCourseRequest> request) {
 		Optional<Student> studentOptional = studentRepository.findById(id);
+		Student student = studentOptional.get();
 		if (studentOptional.isPresent()) {
-			Student student = studentOptional.get();
+
 
 			student.setLastModifiedBy(request.getLoggedInUser());
 			student.setFirstName(request.getDetails().getFirstName());

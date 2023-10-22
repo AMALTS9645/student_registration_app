@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -49,6 +50,9 @@ public class Course {
 	@JsonBackReference
 	private Set<Student> students;
 
+	@OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "cc_fk", referencedColumnName = "id")
+	private List<Comment> comments;
 
 	@CreatedBy
 	private String createdBy;
@@ -67,13 +71,15 @@ public class Course {
 	}
 
 	public Course(Long id, String courseName, String couseDuration, String author, Set<Student> students,
-			String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate) {
+			List<Comment> comments, String createdBy, LocalDateTime createdDate, String lastModifiedBy,
+			LocalDateTime lastModifiedDate) {
 		super();
 		this.id = id;
 		this.courseName = courseName;
 		this.couseDuration = couseDuration;
 		this.author = author;
 		this.students = students;
+		this.comments = comments;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
 		this.lastModifiedBy = lastModifiedBy;
@@ -120,6 +126,14 @@ public class Course {
 		this.students = students;
 	}
 
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -151,5 +165,7 @@ public class Course {
 	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
+
+	
 
 }

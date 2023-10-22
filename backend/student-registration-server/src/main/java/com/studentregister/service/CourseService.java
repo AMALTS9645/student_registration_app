@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.studentregister.dto.CommentRequest;
 import com.studentregister.dto.CourseRequest;
 import com.studentregister.dto.InputRequest;
 import com.studentregister.dto.StudentCourseRequest;
@@ -26,4 +27,8 @@ public interface CourseService {
 	public ResponseEntity<List<Course>> bulkUpdateCourse(List<InputRequest<CourseRequest>> request);
 
 	public ResponseEntity<String> bulkDeleteCourse(List<Long> ids);
+	
+	public ResponseEntity<Course> updateCourseComment(Long id, InputRequest<CommentRequest> request);
+
+	public ResponseEntity<List<Course>> updateBulkCourseComment(Long id, List<InputRequest<CommentRequest>> request);
 }
