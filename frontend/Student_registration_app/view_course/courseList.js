@@ -37,6 +37,25 @@ const updateDetails = async (id, body) => {
   }
 };
 
+const updateDetailsBulk = async (body) => {
+  let response = await fetch(`http://localhost:8888/api/course/editall`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (response.ok) {
+    alert("Courses updated");
+    window.location.reload();
+    return Promise.resolve();
+  } else {
+    return Promise.reject({
+      message: `Error ${response.status}`,
+    });
+  }
+};
 const deleteItem = async (id) => {
   if (confirm("Are you sure you want to delete?")) {
     let response = await fetch(
@@ -51,6 +70,27 @@ const deleteItem = async (id) => {
 
     if (response.status === 204) {
       alert("Course deleted");
+      window.location.reload();
+      return Promise.resolve();
+    } else {
+      return Promise.reject({
+        message: `Error ${response.status}`,
+      });
+    }
+  }
+};
+const deleteItemBulk = async (dataIds) => {
+  if (confirm("Are you sure you want to delete Selected Courses?")) {
+    let response = await fetch(`http://localhost:8000/api/course/deleteall`, {
+      method: "DELETE",
+      body: JSON.stringify(dataIds),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+
+    if (response.ok) {
+      alert("Courses deleted");
       window.location.reload();
       return Promise.resolve();
     } else {
@@ -79,6 +119,7 @@ function populateTable(data) {
 
   data.forEach((item, index) => {
     const row = document.createElement("tr");
+    row.classList.add(".rowItem");
 
     const cell1 = document.createElement("td");
     cell1.textContent = item.id;
@@ -126,7 +167,7 @@ function populateTable(data) {
     viewButton.textContent = "View";
     viewButton.classList.add("btn", "btn-primary", "m-1");
     viewButton.addEventListener("click", () => {
-      window.location.href=`../single_course_page/viewCourse.html?id=${item.id}`;
+      window.location.href = `../single_course_page/viewCourse.html?id=${item.id}`;
     });
 
     const updateButton = document.createElement("button");
@@ -143,8 +184,9 @@ function populateTable(data) {
 
     const checkboxCell = document.createElement("td");
     const checkbox = document.createElement("input");
-    checkbox.classList.add("btn");
+    checkbox.classList.add("btn", "check-box");
     checkbox.type = "checkbox";
+    // checkbox.addEventListener("click", (e) => ischecked(e));
 
     checkboxCell.appendChild(checkbox);
 
@@ -171,6 +213,7 @@ function populateTable(data) {
 
 const editCourse = (e) => {
   console.log(e.target.parentNode.parentNode.childNodes);
+  console.log(e.target);
   e.target.classList.add("d-none");
   e.target.parentNode.parentNode.childNodes[1].classList.add("d-none");
   e.target.parentNode.parentNode.childNodes[2].classList.toggle("d-none");
@@ -214,3 +257,91 @@ const saveData = (e) => {
   updateDetails(id, body);
   console.log(updatedData);
 };
+
+// updateBulk____________________________________________________
+
+const updateBulkStart = (e) => {
+  console.log(
+    e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes
+  );
+
+  e.target.classList.toggle("d-none");
+  e.target.nextElementSibling.classList.toggle("d-none");
+  e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes.forEach(
+    (item) => {
+      if (item.childNodes[8].childNodes[0].checked) {
+        console.log(item);
+        item.childNodes[1].classList.toggle("d-none");
+        item.childNodes[2].classList.toggle("d-none");
+        item.childNodes[3].classList.toggle("d-none");
+        item.childNodes[4].classList.toggle("d-none");
+        item.childNodes[5].classList.toggle("d-none");
+        item.childNodes[6].classList.toggle("d-none");
+      }
+    }
+  );
+};
+
+const saveBulkStart = (e) => {
+  console.log(
+    e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes
+  );
+  const data = [];
+  e.target.classList.toggle("d-none");
+  e.target.previousElementSibling.classList.toggle("d-none");
+  e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes.forEach(
+    (item) => {
+      if (item.childNodes[8].childNodes[0].checked) {
+        const details = {};
+        details["id"] = item.childNodes[0].textContent;
+        details["courseName"] = item.childNodes[2].childNodes[0].value;
+        details["couseDuration"] = item.childNodes[4].childNodes[0].value;
+        details["author"] = item.childNodes[6].childNodes[0].value;
+
+        const body = {
+          userId: "Admin",
+          details: details,
+        };
+        data.push(body);
+        // console.log(item.childNodes[0]);
+        item.childNodes[1].classList.toggle("d-none");
+        item.childNodes[2].classList.toggle("d-none");
+        item.childNodes[3].classList.toggle("d-none");
+        item.childNodes[4].classList.toggle("d-none");
+        item.childNodes[5].classList.toggle("d-none");
+        item.childNodes[6].classList.toggle("d-none");
+      }
+    }
+  );
+  updateDetailsBulk(data);
+};
+
+const deleteBulkStart = (e) => {
+  console.log(
+    e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes
+  );
+
+  const dataIds = [];
+  e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes.forEach(
+    (item) => {
+      if (item.childNodes[8].childNodes[0].checked) {
+        console.log(item.childNodes[0].textContent);
+        dataIds.push(item.childNodes[0].textContent);
+      }
+    }
+  );
+
+  deleteItemBulk(dataIds);
+};
+
+document
+  .getElementById("update-all")
+  .addEventListener("click", (e) => updateBulkStart(e));
+
+document
+  .getElementById("save-all")
+  .addEventListener("click", (e) => saveBulkStart(e));
+
+document
+  .getElementById("delete-all")
+  .addEventListener("click", (e) => deleteBulkStart(e));

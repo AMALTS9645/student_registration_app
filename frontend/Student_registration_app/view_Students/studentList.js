@@ -36,6 +36,25 @@ const updateDetails = async (id, body) => {
     });
   }
 };
+const updateDetailsBulk = async (body) => {
+  let response = await fetch(`http://localhost:8888/api/student/editall`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (response.ok) {
+    alert("Students updated");
+    window.location.reload();
+    return Promise.resolve();
+  } else {
+    return Promise.reject({
+      message: `Error ${response.status}`,
+    });
+  }
+};
 
 const deleteItem = async (id) => {
   if (confirm("Are you sure you want to delete?")) {
@@ -51,6 +70,30 @@ const deleteItem = async (id) => {
 
     if (response.status === 204) {
       alert("Student deleted");
+      window.location.reload();
+      return Promise.resolve();
+    } else {
+      return Promise.reject({
+        message: `Error ${response.status}`,
+      });
+    }
+  }
+};
+const deleteItemBulk = async (dataIds) => {
+  if (confirm("Are you sure you want to delete Selected Students?")) {
+    let response = await fetch(
+      `http://localhost:8888/api/student/deleteall`,
+      {
+        method: "DELETE",
+        body: JSON.stringify(dataIds),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+
+    if (response.ok) {
+      alert("Students deleted");
       window.location.reload();
       return Promise.resolve();
     } else {
@@ -223,3 +266,96 @@ const saveData = (e) => {
   };
   updateDetails(id, body);
 };
+
+// bulkUpdate__________________________________________________
+const updateBulkStart = (e) => {
+  console.log(
+    e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes
+  );
+
+  e.target.classList.toggle("d-none");
+  e.target.nextElementSibling.classList.toggle("d-none");
+  e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes.forEach(
+    (item) => {
+      if (item.childNodes[10].childNodes[0].checked) {
+        console.log(item);
+        item.childNodes[1].classList.toggle("d-none");
+        item.childNodes[2].classList.toggle("d-none");
+        item.childNodes[3].classList.toggle("d-none");
+        item.childNodes[4].classList.toggle("d-none");
+        item.childNodes[5].classList.toggle("d-none");
+        item.childNodes[6].classList.toggle("d-none");
+        item.childNodes[7].classList.toggle("d-none");
+        item.childNodes[8].classList.toggle("d-none");
+      }
+    }
+  );
+};
+
+const saveBulkStart = (e) => {
+  console.log(
+    e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes
+  );
+  const data = [];
+  e.target.classList.toggle("d-none");
+  e.target.previousElementSibling.classList.toggle("d-none");
+  e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes.forEach(
+    (item) => {
+      if (item.childNodes[10].childNodes[0].checked) {
+        const details = {};
+        details["id"] = item.childNodes[0].textContent;
+        details["firstName"] = item.childNodes[2].childNodes[0].value;
+        details["lastName"] = item.childNodes[4].childNodes[0].value;
+        details["age"] = item.childNodes[6].childNodes[0].value;
+        details["departmentName"] = item.childNodes[8].childNodes[0].value;
+
+        const body = {
+          userId: "Admin",
+          details: details,
+        };
+        data.push(body);
+        // console.log(item.childNodes[0]);
+        item.childNodes[1].classList.toggle("d-none");
+        item.childNodes[2].classList.toggle("d-none");
+        item.childNodes[3].classList.toggle("d-none");
+        item.childNodes[4].classList.toggle("d-none");
+        item.childNodes[5].classList.toggle("d-none");
+        item.childNodes[6].classList.toggle("d-none");
+        item.childNodes[7].classList.toggle("d-none");
+        item.childNodes[8].classList.toggle("d-none");
+      }
+    }
+  );
+  // console.log(data)
+  updateDetailsBulk(data);
+};
+
+const deleteBulkStart = (e) => {
+  console.log(
+    e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes
+  );
+
+  const dataIds = [];
+  e.target.parentNode.parentNode.childNodes[3].childNodes[3].childNodes.forEach(
+    (item) => {
+      if (item.childNodes[10].childNodes[0].checked) {
+        console.log(item.childNodes[0].textContent);
+        dataIds.push(item.childNodes[0].textContent);
+      }
+    }
+  );
+  // console.log(dataIds);
+  deleteItemBulk(dataIds);
+};
+
+document
+  .getElementById("update-all")
+  .addEventListener("click", (e) => updateBulkStart(e));
+
+document
+  .getElementById("save-all")
+  .addEventListener("click", (e) => saveBulkStart(e));
+
+document
+  .getElementById("delete-all")
+  .addEventListener("click", (e) => deleteBulkStart(e));
