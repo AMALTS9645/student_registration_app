@@ -40,7 +40,7 @@ function populateStudent(data) {
     // console.log(item)
     const option = document.createElement("option");
     option.value = item.id;
-    option.text = item.firstName + item.lastName;
+    option.text = item.firstName +" "+ item.lastName;
     dropdown.add(option);
   });
 }
