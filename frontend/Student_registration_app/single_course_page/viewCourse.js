@@ -27,6 +27,104 @@ const fetchApiData = async () => {
   }
 };
 
+const deleteItem = async (id) => {
+  if (confirm("Are you sure you want to delete?")) {
+    let response = await fetch(
+      `http://localhost:8888/api/comment/delete/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+
+    if (response.status === 204) {
+      alert("Comment deleted");
+      window.location.reload();
+      return Promise.resolve();
+    } else {
+      return Promise.reject({
+        message: `Error ${response.status}`,
+      });
+    }
+  }
+};
+
+async function register(data) {
+  try {
+    let response = await fetch(
+      `http://localhost:8888/api/course/comment/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data[0]),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+
+    if (response.status === 202) {
+      let responseData = await response.json();
+      //   console.log(responseData);
+      alert("Comment Added");
+      window.location.reload();
+      return Promise.resolve(data);
+    } else {
+      console.error(response);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function registerAll(data) {
+  try {
+    let response = await fetch(
+      `http://localhost:8888/api/course/comment/all/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+
+    if (response.ok) {
+      let responseData = await response.json();
+      //   console.log(responseData);
+      alert("Comments Added");
+      window.location.reload();
+      return Promise.resolve(data);
+    } else {
+      console.error(response);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const updateDetails = async (id, body) => {
+    let response = await fetch(`http://localhost:8000/api/comment/edit/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+  
+    if (response.status === 202) {
+      alert("Comment updated");
+      window.location.reload();
+      return Promise.resolve();
+    } else {
+      return Promise.reject({
+        message: `Error ${response.status}`,
+      });
+    }
+  };
+
 window.addEventListener("load", () => {
   fetchApiData()
     .then((data) => {
@@ -37,7 +135,7 @@ window.addEventListener("load", () => {
     });
 });
 
-console.log(id);
+// console.log(id);
 
 function populateTable(data) {
   const card = document.getElementById("card");
@@ -82,8 +180,12 @@ function populateTable(data) {
 
   card.appendChild(cardBody);
 
-  const list = document.getElementById("list-group");
+  const masterContainer = document.querySelector(".commentDict");
+
   data.comments.map((item) => {
+    const list = document.createElement("ul");
+    list.classList.add("list-group");
+
     const component = document.createElement("div");
     component.classList.add("m-2", "bg-dark", "text-white", "p-1", "rounded");
 
@@ -98,29 +200,41 @@ function populateTable(data) {
     );
     listItem.textContent = item.text;
 
+    const commentInput = document.createElement("textarea");
+    commentInput.id = "text";
+    commentInput.classList.add("form-control", "my-3", "mb-2", "d-none");
+
     const cellActions = document.createElement("div");
 
     const deleteButton = document.createElement("button");
-    deleteButton.innerHTML = `<i class="bi bi-trash"></i>`;
+    deleteButton.textContent = "Delete";
     deleteButton.classList.add("btn", "btn-danger", "m1");
     deleteButton.addEventListener("click", () => {
-      //   deleteItem(item.id);
+      deleteItem(item.id);
     });
 
+    const saveButton = document.createElement("button");
+    saveButton.textContent = "Save";
+    saveButton.classList.add("btn", "btn-success", "m-1", "d-none");
+    saveButton.addEventListener("click", (e) => saveData(e, item.id));
+
     const updateButton = document.createElement("button");
-    updateButton.innerHTML = `<i class="bi bi-pencil-square"></i>`;
+    updateButton.textContent = "Edit";
     updateButton.classList.add("btn", "btn-warning", "m-1");
     updateButton.addEventListener("click", (e) => {
-      //   editStudent(e);
+      editStudent(e);
     });
 
     cellActions.appendChild(updateButton);
+    cellActions.appendChild(saveButton);
     cellActions.appendChild(deleteButton);
 
-    listItem.appendChild(cellActions);
     component.appendChild(head);
     component.appendChild(listItem);
+    component.appendChild(commentInput);
+    component.appendChild(cellActions);
     list.appendChild(component);
+    masterContainer.appendChild(list);
   });
 }
 
@@ -130,7 +244,6 @@ function addComment() {
   commentInput.name = "text";
   commentInput.placeholder = "Write your comment....";
   commentInput.classList.add("form-control", "my-3", "mb-2");
-  //   commentInput.setAttribute("rows"=2);
 
   const card = document.createElement("div");
   card.classList.add("card-body", "cardItem");
@@ -157,60 +270,6 @@ function createRemoveButton() {
 
 addBtn.addEventListener("click", () => addComment());
 
-async function register(data) {
-  try {
-    let response = await fetch(
-      `http://localhost:8888/api/course/comment/${id}`,
-      {
-        method: "PUT",
-        body: JSON.stringify(data[0]),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }
-    );
-
-    if (response.status === 202) {
-      let responseData = await response.json();
-    //   console.log(responseData);
-      alert("Comment Added");
-      window.location.reload();
-      return Promise.resolve(data);
-    } else {
-      console.error(response);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function registerAll(data) {
-  try {
-    let response = await fetch(
-      `http://localhost:8888/api/course/comment/all/${id}`,
-      {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }
-    );
-
-    if (response.ok) {
-      let responseData = await response.json();
-    //   console.log(responseData);
-      alert("Comments Added");
-      window.location.reload();
-      return Promise.resolve(data);
-    } else {
-      console.error(response);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 function displayInputData(event) {
   event.preventDefault();
   const cards = document.querySelectorAll(".cardItem");
@@ -225,7 +284,7 @@ function displayInputData(event) {
 
     inputData.push({ userId: "Admin", details: commentData });
   });
-//   console.log(inputData);
+  //   console.log(inputData);
   if (inputData.length === 1) {
     register(inputData);
   } else if (inputData.length > 1) {
@@ -234,3 +293,31 @@ function displayInputData(event) {
 }
 
 registerButton.addEventListener("click", displayInputData);
+
+// updateComment_______________________________________________________
+
+const editStudent = (e) => {
+  //   console.log(e.target.parentNode.parentNode.childNodes[1].textContent);
+
+  e.target.classList.toggle("d-none");
+  e.target.parentNode.childNodes[1].classList.toggle("d-none");
+  e.target.parentNode.parentNode.childNodes[1].classList.toggle("d-none");
+  e.target.parentNode.parentNode.childNodes[2].classList.toggle("d-none");
+  e.target.parentNode.parentNode.childNodes[2].value =
+    e.target.parentNode.parentNode.childNodes[1].textContent;
+};
+
+const saveData = (e, id) => {
+  const updatedComment = {};
+  console.log(e.target.parentNode.parentNode.childNodes[2]);
+  updatedComment["text"] = e.target.parentNode.parentNode.childNodes[2].value;
+  e.target.previousElementSibling.classList.toggle("d-none");
+  e.target.classList.toggle("d-none");
+
+  const body = {
+    userId: "Admin",
+    details: updatedComment,
+  }
+
+  updateDetails(id, body);
+};
